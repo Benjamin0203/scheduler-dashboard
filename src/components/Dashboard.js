@@ -35,17 +35,29 @@ class Dashboard extends Component {
     focused: null
   };
 
+  //check to see if there is saved focus state after we render the application the first time. When the local storage contains state, we can set the state of the application to match.
+  componentDidMount() {
+    const focused = JSON.parse(localStorage.getItem("focused"));
+
+    if (focused) {
+      this.setState({ focused });
+    }
+  }
+
+  //listen for changes to the state. These functions belong to the Dashboard class.
+  componentDidUpdate(previousProps, previousState) {
+    if (previousState.focused !== this.state.focused) {
+      localStorage.setItem("focused", JSON.stringify(this.state.focused));
+    }
+  }
+
   //Takes an id and set the state of focused to the value of id.
   selectPanel(id) {
     this.setState(previousState => ({
       focused: previousState.focused !== null ? null : id
     }))
   }
-  // selectPanel = id => {
-  //   this.setState({
-  //     focused: id
-  //   })
-  // }
+
 
   render() {
     const dashboardClasses = classnames("dashboard", {
